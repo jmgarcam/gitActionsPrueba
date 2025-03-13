@@ -1,0 +1,33 @@
+name: Ejecutar Script Python en Push
+
+# Qué eventos activarán este workflow
+on:
+  push:
+    branches:
+      - main  # Puedes cambiar a la rama que desees, por ejemplo "master"
+
+jobs:
+  ejecutar_script:
+    runs-on: ubuntu-latest  # El entorno de ejecución es Ubuntu
+
+    steps:
+    # Paso 1: Checkout del código
+    - name: Hacer checkout del código
+      uses: actions/checkout@v2
+
+    # Paso 2: Configurar Python
+    - name: Configurar Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'  # Puedes cambiar a la versión que necesites
+
+    # Paso 3: Instalar las dependencias (si tienes un archivo requirements.txt)
+    #- name: Instalar dependencias
+     # run: |
+      #  python -m pip install --upgrade pip
+       # pip install -r requirements.txt  # Si tienes un archivo requirements.txt
+
+    # Paso 4: Ejecutar el script Python
+    - name: Ejecutar script Python
+      run: |
+        python main.py  # Script que se ejecuta
