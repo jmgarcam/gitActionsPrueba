@@ -1,4 +1,7 @@
 from datetime import datetime
+import requests
+
+
 
 # Obtener la hora actual
 hora_actual = datetime.now()
