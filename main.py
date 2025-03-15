@@ -1,7 +1,9 @@
 from datetime import datetime
 import requests
 import os
+import re
 import subprocess
+
 
 def contar_ramas():
     try:
@@ -85,6 +87,38 @@ def obtener_ficheros_modificados_por_commit(commit_hash):
 
     return ficheros_modificados
 
+def obtener_etiquetas_de_rama(rama):
+    # Ejecutamos el comando git log con --decorate para ver las etiquetas de todos los commits en la rama
+    resultado = subprocess.run(
+        ["git", "log", "--oneline", "--decorate", rama],
+        capture_output=True,
+        text=True
+    )
+    
+    if resultado.returncode != 0:
+        print("Error al obtener las etiquetas.")
+        return []
+
+    # Lista para almacenar las etiquetas encontradas
+    etiquetas = []
+    #print(resultado)
+    # Expresión regular para encontrar las etiquetas en la salida
+    regex_etiqueta = r"tag: ([^\)]+)"
+
+    # Iteramos sobre cada línea de la salida de git log
+    for linea in resultado.stdout.splitlines():
+        # Buscamos todas las etiquetas en la línea
+        encontrado = re.findall(regex_etiqueta, linea)
+        
+        if encontrado:
+            etiquetas.extend(encontrado)  # Añadimos todas las etiquetas encontradas
+
+    # Eliminar etiquetas duplicadas (si es necesario)
+    etiquetas = list(set(etiquetas))
+
+    return etiquetas
+
+
 
 if __name__ == "__main__":
    
@@ -104,6 +138,7 @@ if __name__ == "__main__":
     for rama in ramas:
         print("-"+str(rama))
         print(" Nº commits: " +str(contar_commits(rama)))
+        print(" Etiquetas: " + str(obtener_etiquetas_de_rama(rama)))
         print(" Mensajes de cada commit:")
         hashes, mensajes = obtener_mensajes_commits(rama)
         for i in range(len(mensajes)):
