@@ -14,6 +14,8 @@ jobs:
     # Paso 1: Checkout del código
     - name: Hacer checkout del código
       uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
 
     # Paso 2: Configurar Python
     - name: Configurar Python
