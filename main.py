@@ -31,4 +31,4 @@ if __name__ == "__main__":
     print(f"El usuario que ejecutó esta acción es: {usuario}")
 
 	total = contar_ramas()
-    print(f"Número de ramas remotas: {total}")
+	print(f"Número de ramas remotas: {total}")
