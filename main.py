@@ -33,6 +33,15 @@ def nombre_ramas():
     ]
     return ramas_limpias
 
+def contar_commits(rama):
+    rama_remota = f"origin/{rama}"
+    resultado = subprocess.run(
+        ["git", "rev-list", "--count", rama_remota],
+        capture_output=True,
+        text=True
+    )
+    return int(resultado.stdout.strip())
+
 if __name__ == "__main__":
    
     # Obtener la hora actual
@@ -47,9 +56,10 @@ if __name__ == "__main__":
     print(f"Número de ramas: {total}")
 
     ramas = nombre_ramas()	
-    print("Nombre de las ramas:")
+    print("Nombre de las ramas y commits por rama:")
     for rama in ramas:
 	    print("-"+str(rama))
+	    print("		Nº commits: " + str(contar_commits(rama)))
 
 
 
