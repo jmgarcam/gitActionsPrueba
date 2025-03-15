@@ -20,6 +20,19 @@ def contar_ramas():
         print("Error ejecutando git:", e.stderr)
         return 0
 
+def nombre_ramas():
+    resultado = subprocess.run(
+        ["git", "branch", "-r"],
+        capture_output=True,
+        text=True
+    )
+    ramas = resultado.stdout.strip().split('\n')
+    ramas_limpias = [
+        r.strip() for r in ramas 
+        if r.strip() and '->' not in r
+    ]
+    return ramas_limpias
+
 if __name__ == "__main__":
    
     # Obtener la hora actual
@@ -29,5 +42,15 @@ if __name__ == "__main__":
 
     usuario = os.getenv("GITHUB_ACTOR")
     print(f"El usuario que ejecutó esta acción es: {usuario}")
+
     total=contar_ramas()
-    print(f"Número de ramas remotas: {total}")
+    print(f"Número de ramas: {total}")
+
+    ramas = nombre_ramas()	
+    print("Nombre de las ramas:")
+    for rama in ramas:
+	    print(rama)
+
+
+
+
