@@ -1,5 +1,10 @@
 name: Ejecutar Script Python en Push
 
+- uses: actions/checkout@v3
+  with:
+    fetch-depth: 0  # 👈 trae todo el historial, necesario para contar commits correctamente
+
+
 # Qué eventos activarán este workflow
 on:
   push:
