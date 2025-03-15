@@ -28,7 +28,7 @@ def nombre_ramas():
     )
     ramas = resultado.stdout.strip().split('\n')
     ramas_limpias = [
-        r.strip() for r in ramas 
+        r.strip().replace("origin/", "") for r in ramas 
         if r.strip() and '->' not in r
     ]
     return ramas_limpias
@@ -49,7 +49,7 @@ if __name__ == "__main__":
     ramas = nombre_ramas()	
     print("Nombre de las ramas:")
     for rama in ramas:
-	    print(rama)
+	    print("-"+str(rama))
 
 
 
