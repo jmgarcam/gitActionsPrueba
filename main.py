@@ -21,9 +21,7 @@ def contar_ramas():
         return 0
 
 if __name__ == "__main__":
-    total = contar_ramas()
-    print(f"Número de ramas remotas: {total}")
-
+   
     # Obtener la hora actual
     hora_actual = datetime.now()
 
@@ -31,3 +29,6 @@ if __name__ == "__main__":
 
     usuario = os.getenv("GITHUB_ACTOR")
     print(f"El usuario que ejecutó esta acción es: {usuario}")
+
+	total = contar_ramas()
+    print(f"Número de ramas remotas: {total}")
