@@ -4,7 +4,7 @@ name: Ejecutar Script Python en Push
 on:
   push:
     branches:
-      - main  # Puedes cambiar a la rama que desees, por ejemplo "master"
+      - '*'  # Puedes cambiar a la rama que desees, por ejemplo "master"
 
 jobs:
   ejecutar_script:
