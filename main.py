@@ -119,6 +119,53 @@ def obtener_etiquetas_de_rama(rama):
     return etiquetas
 
 
+def leer_archivo_en_rama(branch: str, path: str) -> str:
+   
+    try:
+        # Guarda la rama actual
+        rama_actual = subprocess.check_output(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            text=True,  stderr=subprocess.DEVNULL
+        ).strip()
+
+        # Cambia a la rama deseada
+        subprocess.run(["git", "checkout", branch], stdout=subprocess.DEVNULL,  stderr=subprocess.DEVNULL, check=True)
+
+        # Lee el contenido del archivo
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"Archivo no encontrado en la rama '{branch}': {path}")
+
+        with open(path, 'r', encoding='utf-8') as f:
+            contenido = f.read()
+
+        return contenido
+    except:
+        print("[leer_archivo_en_rama] La rama " + str(rama) + " NO existe")
+        pass
+
+    finally:
+        # Vuelve a la rama original
+        subprocess.run(["git", "checkout", rama_actual], stdout=subprocess.DEVNULL,  stderr=subprocess.DEVNULL,check=True)
+
+# linea_a_buscar: línea desde la que empieza a revisar el fichero ("package us.dit;")
+def eliminar_parte_contenido(contenido: str, linea_a_buscar: str) -> str:
+    
+    # Buscar la línea que contiene 'linea_a_buscar'
+    index_busqueda = contenido.find(linea_a_buscar)
+    
+    if index_busqueda != -1:
+        # Eliminar todo lo que está antes de la línea que contiene 'linea_a_buscar'
+        contenido = contenido[index_busqueda:]
+    
+    # Eliminar las líneas en blanco
+    lineas = contenido.splitlines()
+    nuevas_lineas = [linea for linea in lineas if linea.strip()]  # Solo las que no estén vacías
+    
+    return "\n".join(nuevas_lineas)
+
+
+
+
 
 if __name__ == "__main__":
    
@@ -144,8 +191,32 @@ if __name__ == "__main__":
         for i in range(len(mensajes)):
             print("     [" + str(hashes[i]) + "] " + mensajes[i])
             print("         * Ficheros modificados: " + str(obtener_ficheros_modificados_por_commit(hashes[i])))
-        
-            
+
+    #rama = "uvus"
+    
+    contenidoFichero_enRama = leer_archivo_en_rama(rama, "claseControl.txt")
+    
+    try:
+         # Ejecucion de generaClase
+        subprocess.run(["./generaClase", str(usuario)], stdout=subprocess.DEVNULL)
+
+        # Fichero generado como resultado de generaClase
+        contenidoFichero_generaClase = subprocess.check_output(["cat", "claseControl.txt"], text=True)
+        #print(contenidoFichero_generaClase)
+
+        # Solo la clase generada por generaClase
+        contenidoFichero_generaClase_Clase = eliminar_parte_contenido(contenidoFichero_generaClase, "package us.dit;")
+        # Clase subida por el alumno a su repo
+        contenidoFichero_enRama_Clase = eliminar_parte_contenido(contenidoFichero_enRama, "package us.dit;")
+
+        if contenidoFichero_generaClase_Clase == contenidoFichero_enRama_Clase:
+            print("Los ficheros incluidos y esperados son iguales")
+
+    except subprocess.CalledProcessError as e:
+        print("El fichero generado por generaClase no se ha generado")
+    
+
+    
        
 
 
