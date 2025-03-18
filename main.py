@@ -223,13 +223,19 @@ if __name__ == "__main__":
 
         if contenidoFichero_generaClase_Clase == contenidoFichero_enRama_Clase:
             print("Los ficheros incluidos y esperados son iguales")
+
+        #print(contenidoFichero_generaClase_Clase)
+        #print(contenidoFichero_enRama_Clase)
         
         uvus_leido, hash_leido = extraer_uvus_y_hash(contenidoFichero_enRama)
-
+        print("hash_leido " +str(hash_leido))
         # timestamp entre 18/03 y 30/03
         rango_fechas = [1742315579, 1743345179]
         
-        verificar_identificador(uvus_leido, hash_leido, rango_fechas)
+        comprobacion_hash = verificar_identificador(uvus_leido, hash_leido, rango_fechas)
+
+        if(comprobacion_hash == True):
+            print("Los hashs coinciden")
 
     except subprocess.CalledProcessError as e:
         print("El fichero generado por generaClase no se ha generado")

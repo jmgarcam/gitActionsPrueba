@@ -15,7 +15,7 @@ def verificar_identificador(uvus, hash_recibido, timestamp_base):
         hash_intento = crear_identificador(uvus, offset)
         #print(offset)
         if hash_intento == hash_recibido:
-            
+            print("hash_intento " + str(hash_intento))
             return True  # Coincide con este timestamp
 
     return False, None
