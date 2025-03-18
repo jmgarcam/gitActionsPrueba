@@ -208,6 +208,7 @@ if __name__ == "__main__":
     contenidoFichero_enRama = leer_archivo_en_rama(rama, "claseControl.txt")
     
     repo_name = os.getenv('GITHUB_REPOSITORY')
+    print("Repo name" + str(repo_name))
     grupo = 1
 
     try:
