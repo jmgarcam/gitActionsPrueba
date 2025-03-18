@@ -163,8 +163,19 @@ def eliminar_parte_contenido(contenido: str, linea_a_buscar: str) -> str:
     
     return "\n".join(nuevas_lineas)
 
+# Extrae el uvus y el timestamp del fichero de texto
+def extraer_uvus_y_timestamp(texto):
+    uvus = None
+    timestamp = None
 
+    # Buscar líneas tipo //clave:valor
+    for linea in texto.splitlines():
+        if match := re.match(r'//uvus:(.+)', linea):
+            uvus = match.group(1).strip()
+        elif match := re.match(r'//timestamp:(.+)', linea):
+            timestamp = match.group(1).strip()
 
+    return uvus, timestamp
 
 
 if __name__ == "__main__":
@@ -212,6 +223,7 @@ if __name__ == "__main__":
         if contenidoFichero_generaClase_Clase == contenidoFichero_enRama_Clase:
             print("Los ficheros incluidos y esperados son iguales")
 
+        extraer_uvus_y_timestamp(contenidoFichero_enRama_Clase)
     except subprocess.CalledProcessError as e:
         print("El fichero generado por generaClase no se ha generado")
     
