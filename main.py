@@ -198,12 +198,11 @@ if __name__ == "__main__":
         print(" Etiquetas: " + str(obtener_etiquetas_de_rama(rama)))
         print(" Mensajes de cada commit:")
         hashes, mensajes = obtener_mensajes_commits(rama)
-        #for i in range(len(mensajes)):
-        #    print("     [" + str(hashes[i]) + "] " + mensajes[i])
-        #    print("         * Ficheros modificados: " + str(obtener_ficheros_modificados_por_commit(hashes[i])))
+        for i in range(len(mensajes)):
+            print("     [" + str(hashes[i]) + "] " + mensajes[i])
+            print("         * Ficheros modificados: " + str(obtener_ficheros_modificados_por_commit(hashes[i])))
 
-    #rama = "uvus"
-    
+       
     contenidoFichero_enRama = leer_archivo_en_rama(rama, "claseControl.txt")
        
 
@@ -222,20 +221,19 @@ if __name__ == "__main__":
         contenidoFichero_enRama_Clase = eliminar_parte_contenido(contenidoFichero_enRama, "package us.dit;")
 
         if contenidoFichero_generaClase_Clase == contenidoFichero_enRama_Clase:
-            print("Los ficheros incluidos y esperados son iguales")
-
-        #print(contenidoFichero_generaClase_Clase)
-        #print(contenidoFichero_enRama_Clase)
+            print("El fichero del alumno y el esperado son iguales")
         
         uvus_leido, hash_leido = extraer_uvus_y_hash(contenidoFichero_enRama)
-        print("hash_leido " +str(hash_leido))
+        print("hash leido del alumno " +str(hash_leido))
         # timestamp entre 18/03 y 30/03
         rango_fechas = [1742315579, 1743345179]
-        print(uvus_leido)
+        
         comprobacion_hash = verificar_identificador(str(uvus_leido), hash_leido, rango_fechas)
 
         if(comprobacion_hash == True):
             print("Los hashs coinciden")
+        else:
+            print("Los hashs NO coinciden")
 
     except subprocess.CalledProcessError as e:
         print("El fichero generado por generaClase no se ha generado")
