@@ -172,7 +172,7 @@ def extraer_uvus_y_timestamp(texto):
     for linea in texto.splitlines():
         if match := re.match(r'//uvus:(.+)', linea):
             uvus = match.group(1).strip()
-        elif match := re.match(r'//timestamp:(.+)', linea):
+        elif match := re.match(r'//pass:(.+)', linea):
             timestamp = match.group(1).strip()
 
     return uvus, timestamp
@@ -207,9 +207,12 @@ if __name__ == "__main__":
     
     contenidoFichero_enRama = leer_archivo_en_rama(rama, "claseControl.txt")
     
+    repo_name = os.getenv('GITHUB_REPOSITORY')
+    grupo = 1
+
     try:
          # Ejecucion de generaClase
-        subprocess.run(["./generaClase", str(usuario)], stdout=subprocess.DEVNULL)
+        subprocess.run(["./generaClase", str(usuario), str(grupo)], stdout=subprocess.DEVNULL)
 
         # Fichero generado como resultado de generaClase
         contenidoFichero_generaClase = subprocess.check_output(["cat", "claseControl.txt"], text=True)
@@ -222,8 +225,8 @@ if __name__ == "__main__":
 
         if contenidoFichero_generaClase_Clase == contenidoFichero_enRama_Clase:
             print("Los ficheros incluidos y esperados son iguales")
-
-        extraer_uvus_y_timestamp(contenidoFichero_enRama_Clase)
+        
+        uvus_leido, timestamp_leido = extraer_uvus_y_timestamp(contenidoFichero_enRama)
     except subprocess.CalledProcessError as e:
         print("El fichero generado por generaClase no se ha generado")
     
