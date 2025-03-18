@@ -129,32 +129,15 @@ def obtener_etiquetas_de_rama(rama):
 
 
 def leer_archivo_en_rama(branch: str, path: str) -> str:
-   
     try:
-        # Guarda la rama actual
-        rama_actual = subprocess.check_output(
-            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-            text=True,  stderr=subprocess.DEVNULL
-        ).strip()
-
-        # Cambia a la rama deseada
-        subprocess.run(["git", "checkout", branch], stdout=subprocess.DEVNULL,  stderr=subprocess.DEVNULL, check=True)
-
-        # Lee el contenido del archivo
-        if not os.path.exists(path):
-            raise FileNotFoundError(f"Archivo no encontrado en la rama '{branch}': {path}")
-
-        with open(path, 'r', encoding='utf-8') as f:
-            contenido = f.read()
-
+        contenido = subprocess.check_output(
+            ["git", "show", f"{branch}:{path}"],
+            text=True
+        )
         return contenido
-    except:
-        print("[leer_archivo_en_rama] La rama " + str(rama) + " NO existe")
-        pass
-
-    finally:
-        # Vuelve a la rama original
-        subprocess.run(["git", "checkout", rama_actual], stdout=subprocess.DEVNULL,  stderr=subprocess.DEVNULL,check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"[leer_archivo_sin_checkout] Error: {e}")
+        return ""
 
 # linea_a_buscar: línea desde la que empieza a revisar el fichero ("package us.dit;")
 def eliminar_parte_contenido(contenido: str, linea_a_buscar: str) -> str:
@@ -173,7 +156,7 @@ def eliminar_parte_contenido(contenido: str, linea_a_buscar: str) -> str:
     return "\n".join(nuevas_lineas)
 
 # Extrae el uvus y el timestamp del fichero de texto
-def extraer_uvus_y_timestamp(texto):
+def extraer_uvus_y_hash(texto):
     uvus = None
     timestamp = None
 
@@ -215,18 +198,18 @@ if __name__ == "__main__":
         print(" Etiquetas: " + str(obtener_etiquetas_de_rama(rama)))
         print(" Mensajes de cada commit:")
         hashes, mensajes = obtener_mensajes_commits(rama)
-        for i in range(len(mensajes)):
-            print("     [" + str(hashes[i]) + "] " + mensajes[i])
-            print("         * Ficheros modificados: " + str(obtener_ficheros_modificados_por_commit(hashes[i])))
+        #for i in range(len(mensajes)):
+        #    print("     [" + str(hashes[i]) + "] " + mensajes[i])
+        #    print("         * Ficheros modificados: " + str(obtener_ficheros_modificados_por_commit(hashes[i])))
 
     #rama = "uvus"
     
     contenidoFichero_enRama = leer_archivo_en_rama(rama, "claseControl.txt")
-    
-    
+       
 
     try:
          # Ejecucion de generaClase
+        
         subprocess.run(["./generaClase", str(usuario), str(grupo)], stdout=subprocess.DEVNULL)
 
         # Fichero generado como resultado de generaClase
@@ -241,11 +224,12 @@ if __name__ == "__main__":
         if contenidoFichero_generaClase_Clase == contenidoFichero_enRama_Clase:
             print("Los ficheros incluidos y esperados son iguales")
         
-        uvus_leido, timestamp_leido = extraer_uvus_y_timestamp(contenidoFichero_enRama)
+        uvus_leido, hash_leido = extraer_uvus_y_hash(contenidoFichero_enRama)
 
-        rango_fechas = [1742284800, 1742286600]
-        hash_generado = crear_identificador(usuario, 1742285962)
-        print(verificar_identificador(uvus_leido, hash_generado, rango_fechas))
+        # timestamp entre 18/03 y 30/03
+        rango_fechas = [1742315579, 1743345179]
+        
+        verificar_identificador(uvus_leido, hash_leido, rango_fechas)
 
     except subprocess.CalledProcessError as e:
         print("El fichero generado por generaClase no se ha generado")

@@ -1,5 +1,6 @@
 import sys
 from datetime import datetime
+from validacion_credenciales import *
 
 # Cuenta Caracteres
 def cuentaCaracteres():
@@ -335,6 +336,9 @@ def suma_ascii(texto: str) -> int:
 dt = datetime.now()
 ts = datetime.timestamp(dt)
 
+# generar el hash (uvus + timestamp)
+hash_generado = crear_identificador(sys.argv[1], str(ts))
+
 # Fecha objetivo: 6 de marzo de 2025 a las 13:00 AM
 fecha_objetivo = datetime(2025, 3, 6, 13, 0)
 
@@ -368,10 +372,7 @@ try:
                 else:
                     resultado_str = palindroma()
 
-                dt = datetime.now()
-                ts = datetime.timestamp(dt)
-
-                resultado_str = "//uvus:" +sys.argv[1] + "\n//pass:"+ str(int(ts))+"\n\n" + resultado_str 
+                resultado_str = "//uvus:" +sys.argv[1] + "\n//pass:"+ str(hash_generado)+"\n\n" + resultado_str 
 
                 with open("claseControl.txt", "w", encoding="utf-8") as archivo:
                     archivo.write(resultado_str)
@@ -389,7 +390,7 @@ try:
                 else:
                     resultado_str = intercambiarMayusculasMinusculas()
 
-                resultado_str = "//uvus:" +sys.argv[1] + "\n//pass:"+ str(int(ts))+"\n\n" + resultado_str 
+                resultado_str = "//uvus:" +sys.argv[1] + "\n//pass:"+ str(hash_generado)+"\n\n" + resultado_str 
 
                 with open("claseControl.txt", "w", encoding="utf-8") as archivo:
                     archivo.write(resultado_str)
@@ -406,7 +407,7 @@ try:
                 else:
                     resultado_str = esPrimo()
 
-                resultado_str = "//uvus:" +sys.argv[1] + "\n//pass:"+ str(int(ts))+"\n\n" + resultado_str 
+                resultado_str = "//uvus:" +sys.argv[1] + "\n//pass:"+ str(hash_generado)+"\n\n" + resultado_str 
 
                 with open("claseControl.txt", "w", encoding="utf-8") as archivo:
                     archivo.write(resultado_str)
