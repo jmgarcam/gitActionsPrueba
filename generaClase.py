@@ -335,9 +335,9 @@ def suma_ascii(texto: str) -> int:
 
 dt = datetime.now()
 ts = datetime.timestamp(dt)
-
+# CUIDADO! El ts tiene decimales, por ello se hace int(ts)
 # generar el hash (uvus + timestamp)
-hash_generado = crear_identificador(sys.argv[1], str(ts))
+hash_generado = crear_identificador(sys.argv[1], str(int(ts)))
 
 # Fecha objetivo: 6 de marzo de 2025 a las 13:00 AM
 fecha_objetivo = datetime(2025, 3, 6, 13, 0)

@@ -231,8 +231,8 @@ if __name__ == "__main__":
         print("hash_leido " +str(hash_leido))
         # timestamp entre 18/03 y 30/03
         rango_fechas = [1742315579, 1743345179]
-        
-        comprobacion_hash = verificar_identificador(uvus_leido, hash_leido, rango_fechas)
+        print(uvus_leido)
+        comprobacion_hash = verificar_identificador(str(uvus_leido), hash_leido, rango_fechas)
 
         if(comprobacion_hash == True):
             print("Los hashs coinciden")
