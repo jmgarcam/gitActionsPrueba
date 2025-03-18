@@ -5,6 +5,15 @@ import re
 import subprocess
 
 
+def extraer_grupo(valor):
+    # Usamos una expresión regular para extraer el valor después de "Control1."
+    match = re.search(r'Control1\.(x_\d+)', valor)
+    if match:
+        return match.group(1)  # Devuelve el valor de 'x' (ej. 'x_25')
+    else:
+        return None  # Retorna None si no encuentra el patrón esperado
+
+
 def contar_ramas():
     try:
         # Listar todas las ramas remotas
@@ -182,6 +191,12 @@ if __name__ == "__main__":
    
     # Obtener la hora actual
     hora_actual = datetime.now()
+
+    repo_name = os.getenv('GITHUB_REPOSITORY')
+    print("Repo name" + str(repo_name))
+    grupo = extraer_grupo(repo_name)
+    print("Grupo al que pertenece: " + str(grupo))
+    grupo = 1
     
     print("Push efectuado a las: " + str(hora_actual))
 
@@ -207,9 +222,7 @@ if __name__ == "__main__":
     
     contenidoFichero_enRama = leer_archivo_en_rama(rama, "claseControl.txt")
     
-    repo_name = os.getenv('GITHUB_REPOSITORY')
-    print("Repo name" + str(repo_name))
-    grupo = 1
+    
 
     try:
          # Ejecucion de generaClase
