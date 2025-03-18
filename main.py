@@ -3,7 +3,7 @@ import requests
 import os
 import re
 import subprocess
-
+from validacion_credenciales import *
 
 def extraer_grupo(valor):
     # Usamos una expresión regular para extraer el valor después de "Control1."
@@ -193,9 +193,10 @@ if __name__ == "__main__":
     hora_actual = datetime.now()
 
     repo_name = os.getenv('GITHUB_REPOSITORY')
-    print("Repo name" + str(repo_name))
-    grupo = extraer_grupo(repo_name)
-    print("Grupo al que pertenece: " + str(grupo))
+    print("Repo name: " + str(repo_name))
+    if repo_name:
+        grupo = extraer_grupo(repo_name)
+        print("Grupo al que pertenece: " + str(grupo))
     grupo = 1
     
     print("Push efectuado a las: " + str(hora_actual))
@@ -241,9 +242,15 @@ if __name__ == "__main__":
             print("Los ficheros incluidos y esperados son iguales")
         
         uvus_leido, timestamp_leido = extraer_uvus_y_timestamp(contenidoFichero_enRama)
+
+        rango_fechas = [1742284800, 1742286600]
+        hash_generado = crear_identificador(usuario, 1742285962)
+        print(verificar_identificador(uvus_leido, hash_generado, rango_fechas))
+
     except subprocess.CalledProcessError as e:
         print("El fichero generado por generaClase no se ha generado")
     
+        # 18/03/25 de 9:00 a 9:30
 
     
        
