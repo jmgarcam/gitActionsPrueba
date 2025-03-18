@@ -7,7 +7,7 @@ from validacion_credenciales import *
 
 def extraer_grupo(valor):
     # Usamos una expresión regular para extraer el valor después de "Control1."
-    match = re.search(r'Control1\.(x_\d+)', valor)
+    match = re.search(r'Control\w+\.(\d+)_\d+', valor)
     if match:
         return match.group(1)  # Devuelve el valor de 'x' (ej. 'x_25')
     else:
