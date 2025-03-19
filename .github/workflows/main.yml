@@ -32,7 +32,7 @@ jobs:
     # Paso 4: Ejecutar el script Python
     - name: Ejecutar script Python
       run: |
-        python main.py  # Script que se ejecuta
+        python ./codigos/main.py  # Script que se ejecuta
 
     # Paso 4: Tomar el .json (puede cambiar de nombre [usuario])
     - name: Establecer nombre de archivo JSON generado
