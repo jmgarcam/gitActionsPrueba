@@ -16,7 +16,7 @@ def verificar_identificador(uvus, hash_recibido, timestamp_base):
         
         if hash_intento == hash_recibido:
             print("hash generado por la corrección " + str(hash_intento))
-            return True  # Coincide con este timestamp
+            return True, hash_intento  # Coincide con este timestamp
 
-    return False
+    return False, None
 

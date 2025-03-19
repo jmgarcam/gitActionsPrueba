@@ -4,6 +4,7 @@ import os
 import re
 import subprocess
 from validacion_credenciales import *
+from generaJson import *
 
 def extraer_grupo(valor):
     # Usamos una expresión regular para extraer el valor después de "Control1."
@@ -172,37 +173,54 @@ def extraer_uvus_y_hash(texto):
 
 if __name__ == "__main__":
    
+    resultados = dict()
     # Obtener la hora actual
     hora_actual = datetime.now()
 
     repo_name = os.getenv('GITHUB_REPOSITORY')
+
+    resultados["repo_name"] = repo_name
+
     print("Repo name: " + str(repo_name))
     if repo_name:
         grupo = extraer_grupo(repo_name)
         print("Grupo al que pertenece: " + str(grupo))
+        resultados["grupo"] = grupo
     grupo = 1
     
     print("Push efectuado a las: " + str(hora_actual))
 
     usuario = os.getenv("GITHUB_ACTOR")
+    resultados["usuario"] = usuario
     print(f"El usuario que ejecutó esta acción es: {usuario}")
 
-    total=contar_ramas()
-    print(f"Número de ramas: {total}")
+    num_ramas=contar_ramas()
+    print(f"Número de ramas: {num_ramas}")
+    resultados["num_ramas"] = num_ramas
 
-    ramas = nombre_ramas()	
+    ramas = nombre_ramas()
+    resultados["ramas"] = ramas
+
+    resultados["commits"] = {clave: {} for clave in ramas}
+    resultados["ficheros"] = {clave: {} for clave in ramas}
+
+    
     print("Nombre de las ramas y commits por rama:")
     for rama in ramas:
         print("-"+str(rama))
         print(" Nº commits: " +str(contar_commits(rama)))
         print(" Etiquetas: " + str(obtener_etiquetas_de_rama(rama)))
-        print(" Mensajes de cada commit:")
+        
         hashes, mensajes = obtener_mensajes_commits(rama)
         for i in range(len(mensajes)):
-            print("     [" + str(hashes[i]) + "] " + mensajes[i])
-            print("         * Ficheros modificados: " + str(obtener_ficheros_modificados_por_commit(hashes[i])))
+            resultados["commits"][rama].update({hashes[i]:mensajes[i]})
+            resultados["ficheros"][rama].update({hashes[i]:obtener_ficheros_modificados_por_commit(hashes[i])})
+            #print("     [" + str(hashes[i]) + "] " + mensajes[i])
+            #print("         * Ficheros modificados: " + str(obtener_ficheros_modificados_por_commit(hashes[i])))
+    
 
-       
+    #print(resultados["commits"]["main"])
+    #print(resultados["ficheros"]["main"])
     contenidoFichero_enRama = leer_archivo_en_rama(rama, "claseControl.txt")
        
 
@@ -220,27 +238,40 @@ if __name__ == "__main__":
         # Clase subida por el alumno a su repo
         contenidoFichero_enRama_Clase = eliminar_parte_contenido(contenidoFichero_enRama, "package us.dit;")
 
+        resultados["ficheros_iguales"] = False
         if contenidoFichero_generaClase_Clase == contenidoFichero_enRama_Clase:
             print("El fichero del alumno y el esperado son iguales")
+            resultados["ficheros_iguales"] = True
+        else:
+            print("El fichero del alumno y el esperado  NO son iguales")
         
         uvus_leido, hash_leido = extraer_uvus_y_hash(contenidoFichero_enRama)
         print("hash leido del alumno " +str(hash_leido))
+
+        resultados["hash_leido"] = hash_leido
+        
         # timestamp entre 18/03 y 30/03
         rango_fechas = [1742315579, 1743345179]
         
-        comprobacion_hash = verificar_identificador(str(uvus_leido), hash_leido, rango_fechas)
+        comprobacion_hash, hash_calculado = verificar_identificador(str(uvus_leido), hash_leido, rango_fechas)
 
+        resultados["hash calculado"] = hash_calculado
+
+        resultados["hash_coinciden"] = False
         if(comprobacion_hash == True):
             print("Los hashs coinciden")
+            resultados["hash_coinciden"] = True
         else:
             print("Los hashs NO coinciden")
+        
+        guardar_json(resultados, str(usuario)+".json")
 
     except subprocess.CalledProcessError as e:
         print("El fichero generado por generaClase no se ha generado")
     
         # 18/03/25 de 9:00 a 9:30
 
-    
+        
        
 
 
