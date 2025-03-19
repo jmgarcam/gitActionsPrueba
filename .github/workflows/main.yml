@@ -65,5 +65,3 @@ jobs:
         from: "GitHub Actions <${{ secrets.EMAIL_USERNAME }}>"
         body: "usuario: ${{ steps.obtener_nombre.outputs.filename }}"
         attachments: ${{ steps.archivo_json.outputs.json_file }}
-
-        
