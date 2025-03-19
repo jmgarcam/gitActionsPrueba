@@ -33,3 +33,20 @@ jobs:
     - name: Ejecutar script Python
       run: |
         python main.py  # Script que se ejecuta
+
+
+    # Paso 5: Enviar correo con el json
+    - name: Enviar correo con archivo JSON
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.gmail.com
+        server_port: 587
+        username: ${{ secrets.EMAIL_USERNAME }}
+        password: ${{ secrets.EMAIL_PASSWORD }}
+        subject: "Reporte JSON generado automáticamente"
+        to: isdeptel@gmail.com
+        from: "GitHub Actions <${{ secrets.EMAIL_USERNAME }}>"
+        body: "Aquí tienes el reporte JSON generado."
+        attachments: *.json
+
+        
