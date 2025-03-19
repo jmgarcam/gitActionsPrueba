@@ -186,7 +186,7 @@ if __name__ == "__main__":
         grupo = extraer_grupo(repo_name)
         print("Grupo al que pertenece: " + str(grupo))
         resultados["grupo"] = grupo
-    grupo = 1
+    #grupo = 1
     
     print("Push efectuado a las: " + str(hora_actual))
 
