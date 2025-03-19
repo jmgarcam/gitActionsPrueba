@@ -227,7 +227,7 @@ if __name__ == "__main__":
     try:
          # Ejecucion de generaClase
         
-        subprocess.run(["./generaClase", str(usuario), str(grupo)], stdout=subprocess.DEVNULL)
+        subprocess.run(["./codigos/generaClase", str(usuario), str(grupo)], stdout=subprocess.DEVNULL)
 
         # Fichero generado como resultado de generaClase
         contenidoFichero_generaClase = subprocess.check_output(["cat", "claseControl.txt"], text=True)
