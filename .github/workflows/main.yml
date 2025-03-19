@@ -42,6 +42,16 @@ jobs:
         echo "Archivo generado: $NOMBRE_JSON"
         echo "json_file=$NOMBRE_JSON" >> $GITHUB_OUTPUT
 
+    # Paso 5: Obtener nombre del usuario a partir del json
+    - name: Nombre del usuario
+      id: obtener_nombre
+      run: |
+        fullpath="${{ steps.archivo_json.outputs.json_file }}"
+        filename_with_ext="$(basename "$fullpath")"
+        filename="${filename_with_ext%.json}"
+        echo "filename=$filename" >> $GITHUB_OUTPUT
+
+
     # Paso 6: Enviar correo con el json
     - name: Enviar correo con archivo JSON
       uses: dawidd6/action-send-mail@v4
@@ -50,10 +60,10 @@ jobs:
         server_port: 465
         username: ${{ secrets.EMAIL_USERNAME }}
         password: ${{ secrets.EMAIL_PASSWORD }}
-        subject: "Reporte JSON generado automáticamente"
+        subject: "Control 1 - ${{ steps.obtener_nombre.outputs.filename }}"
         to: isdeptel@gmail.com
         from: "GitHub Actions <${{ secrets.EMAIL_USERNAME }}>"
-        body: "Aquí tienes el reporte JSON generado."
+        body: "usuario: ${{ steps.obtener_nombre.outputs.filename }}"
         attachments: ${{ steps.archivo_json.outputs.json_file }}
 
         
