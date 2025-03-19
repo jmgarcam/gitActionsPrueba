@@ -34,8 +34,15 @@ jobs:
       run: |
         python main.py  # Script que se ejecuta
 
+    # Paso 4: Tomar el .json (puede cambiar de nombre [usuario])
+    - name: Establecer nombre de archivo JSON generado
+      id: archivo_json
+      run: |
+        NOMBRE_JSON=$(ls *.json)
+        echo "Archivo generado: $NOMBRE_JSON"
+        echo "json_file=$NOMBRE_JSON" >> $GITHUB_OUTPUT
 
-    # Paso 5: Enviar correo con el json
+    # Paso 6: Enviar correo con el json
     - name: Enviar correo con archivo JSON
       uses: dawidd6/action-send-mail@v3
       with:
@@ -47,6 +54,6 @@ jobs:
         to: isdeptel@gmail.com
         from: "GitHub Actions <${{ secrets.EMAIL_USERNAME }}>"
         body: "Aquí tienes el reporte JSON generado."
-        attachments: *.json
+        attachments: ${{ steps.archivo_json.outputs.json_file }}
 
         
