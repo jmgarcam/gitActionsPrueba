@@ -12,6 +12,13 @@ jobs:
 
     steps:
     # Paso 1: Checkout del código
+    - name: Create feedback file
+      run: |
+        echo " Feedback para @usuario-curso" > feedback.md
+        echo "Tu código ha sido revisado, aquí están los comentarios:" >> feedback.md
+        echo "- Buen manejo de las funciones." >> feedback.md
+        echo "- Cuidado con las validaciones." >> feedback.md
+    
     - name: Hacer checkout del código
       uses: actions/checkout@v2
       with:
